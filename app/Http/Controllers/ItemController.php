@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\User; //for notification
 use App\Models\ItemImagePivot;
 use App\Http\Requests\ItemStoreRequest;
 use App\Http\Requests\ItemUpdateRequest;
@@ -45,16 +46,21 @@ public function markAsRead(){
      */
     public function store(ItemStoreRequest $request)
     {
-        $created = Item::create(['name' => $request->name, 'sku' => $request->sku, 'price' => $request->price]);
+        $created = Item::create([
+            'name' => $request->name, 
+            'sku' => $request->sku, 
+            'price' => $request->price]);
+
+
         foreach ($request->input('document', []) as $file) {
             //your file to be uploaded insert to database
             ItemImagePivot::create(['item_id' => $created->id, 'image' => $file]);
         }
         if ($created) { // inserted success
-            // $user=Item::all();
-            // $message['title']="File Created";
-            // $message['alert']="Product created successfully...!";
-            // $user->notify(new CreateSuccessful($message));  //54-57 line for notification.
+             
+            User::find(Auth::user()->id)->notify(new CreateSuccessful($created->price));
+            //return redirect()->route('item.index')->with('status','Your price create was successful!');
+
             return redirect()->route('item.index')->withSuccess('Created successfully...!');
         }
         return redirect()->back()->withInput()->with('error', 'fails not created..!');

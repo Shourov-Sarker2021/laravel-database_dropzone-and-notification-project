@@ -30,3 +30,7 @@ Route::delete('/items/{image}', [ItemController::class,'delete'])->name('image.d
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Notificatio unread route 
+
+Route::get('/mark-as-read', [App\Http\Controllers\ItemController::class,'markAsRead'])->name('mark-as-read');
+

@@ -16,10 +16,10 @@ class CreateSuccessful extends Notification
      *
      * @return void
      */
-    protected $message;
-    public function __construct($message)
+    protected $price;
+    public function __construct($price)
     {
-        $this->message=$message;
+        $this->price=$price;
     }
 
     /**
@@ -56,7 +56,7 @@ class CreateSuccessful extends Notification
     public function toArray($notifiable)
     {
         return [
-            'data'=>'Your Item '.$this->message.'created Successfully'
+            'data'=>'Your Item '.$this->price.'created Successfully'
         ];
     }
 }
